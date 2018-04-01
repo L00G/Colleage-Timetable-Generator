@@ -1,0 +1,97 @@
+﻿<Window x:Class="ColleageSchedule.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ColleageSchedule"
+        mc:Ignorable="d"
+        Title="시간표 생성기          제작 ) L00G" Height="660" Width="1200" ResizeMode="NoResize">
+
+  
+
+    <Grid Margin="0,0,0,9">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.RowSpan="1" Width="auto" Grid.ColumnSpan="3" Margin="0,0,-457,0">
+            <MenuItem IsTabStop="False" Header="Menu..." FontSize="14" >
+                <MenuItem Header="New" Click="NewButton_Click"/>
+                <MenuItem Header="Save..." Click="SaveButton_Click"/>
+                <MenuItem Header="Load..." Click="LoadButton_Click"/>
+                <Separator/>
+                <MenuItem Header="Exit" Click="ExitButton_Click"/>
+            </MenuItem>
+        </Menu>
+        <ListView x:Name="LectureListBox" IsTabStop="false" ItemsSource="{Binding}" Margin="5,5,4,5" Grid.Row="2" PreviewMouseMove="LectureListBox_PreviewMouseMove">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="IsTabStop" Value="False"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn Header="제외">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=Exception}" IsTabStop="false" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Header="강의"  Width="120" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Professor}" Header="교수" Width="60" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Grade}" Header="학점" Width="30"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=TimeString}" Header="시간" Width="265"/>
+                    <GridViewColumn Header="삭제" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X" Width="30" IsTabStop="false" Click="DeleteButton_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBox x:Name="NameBox" TabIndex="0" HorizontalAlignment="Left" Height="23" Margin="79,28,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="85" Text="경재학개론" Grid.Row="3" />
+        <TextBox x:Name="ProfessorBox" TabIndex="1" HorizontalAlignment="Left" Height="23" Margin="79,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85" Text="이서재" Grid.Row="3"/>
+        <ComboBox Name="GradeBox"  TabIndex="2" HorizontalAlignment="Left" Margin="79,84,0,0" VerticalAlignment="Top" SelectedIndex="2" Width="85" Grid.Row="3" Height="22"/>
+        <Button Content="강의 추가" TabIndex="4"  HorizontalAlignment="Left" Height="20" Margin="377,126,0,0" VerticalAlignment="Top" Width="101" RenderTransformOrigin="0.708,1.35" Click="OnClickAddButton" Grid.Row="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="26,30,0,0" TextWrapping="Wrap" Text="과목명" VerticalAlignment="Top" Grid.Row="3" Height="21" Width="auto"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,56,0,0" TextWrapping="Wrap" Text="교수 이름" VerticalAlignment="Top" Grid.Row="3" Height="23" Width="auto"/>
+        <TextBlock HorizontalAlignment="Left" Margin="37,85,0,0" TextWrapping="Wrap" Text="학점" VerticalAlignment="Top" Grid.Row="3" Height="21" Width="auto"/>
+        <TextBlock HorizontalAlignment="Left" Margin="182,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="298" RenderTransformOrigin="0.489,-0.364" Grid.Row="3"><Run Text="시간 "/><Run Text="              "/><Run Text="예시) 월45 화8"/><Run Text=" /"/><Run Text=" 월89 화"/><Run Text="A"/><Run Text=" "/></TextBlock>
+        <TextBox Name="TimeBox" TabIndex="3" HorizontalAlignment="Left" Height="22" Margin="182,85,0,0" TextWrapping="Wrap" Text="월45 화8 / 월89 화9" VerticalAlignment="Top" Width="296" RenderTransformOrigin="0.49,0.091" Grid.Row="3" CharacterCasing="Upper"/>
+        <ComboBox Name="lessonDayCountBox" IsTabStop="false" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="105" SelectedIndex="0" SelectionChanged="OptionChanged" Grid.Row="3" Height="22" Grid.Column="1">
+            <ComboBoxItem Content="상관없음" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 1일" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 2일" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 3일" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 4일" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 5일" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="주 6일" HorizontalAlignment="Left" Width="118"/>
+        </ComboBox>
+        <local:CustomGird x:Name="ResultSchedule" Width="485" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Margin="5,5,5,28"/>
+        <ListBox Name="ResultList" Height="382" IsTabStop="false" Width="100" SelectionChanged="SelectItem" Grid.Row="2" Grid.Column="1" Margin="6,6,6,5">
+            <ListBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="-0.526"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-0.491"/>
+                </TransformGroup>
+            </ListBox.RenderTransform>
+        </ListBox>
+        <ComboBox Name="minGradeBox" IsTabStop="false" Height="22" Margin="67,28,0,150" SelectedIndex="0" Width="47" MaxDropDownHeight="140" SelectionChanged="OptionChanged" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock Name="GradePrintBox" TextWrapping="Wrap" Width="100" Grid.Row="1" Grid.Column="2" Margin="107,5,289,5" Height="16"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="10,30,0,0" Grid.Row="3" TextWrapping="Wrap" Text="최소 학점" VerticalAlignment="Top" Width="auto"/>
+        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Height="auto" Margin="10,85,0,0" Grid.Row="3" TextWrapping="Wrap" Text="강의 일수" VerticalAlignment="Top" Width="105"/>
+    </Grid>
+</Window>
